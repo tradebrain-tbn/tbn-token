@@ -1,0 +1,16 @@
+{
+  "name": "TradeBrain",
+  "symbol": "TBN",
+  "description": "TradeBrain (TBN) is the utility token of TradeBrain, an automated crypto trading platform. Fixed supply of 10 billion, no minting, no freezing. Forged, not printed.",
+  "image": "https://raw.githubusercontent.com/tradebrain-tbn/tbn-token/main/tbn_logo.png",
+  "external_url": "",
+  "attributes": [
+    { "trait_type": "Network", "value": "Solana" },
+    { "trait_type": "Total supply", "value": "10,000,000,000" },
+    { "trait_type": "Decimals", "value": "9" }
+  ],
+  "properties": {
+    "files": [ { "uri": "https://raw.githubusercontent.com/tradebrain-tbn/tbn-token/main/tbn_logo.png", "type": "image/png" } ],
+    "category": "image"
+  }
+}
