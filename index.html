@@ -44,6 +44,10 @@
   .melding { background:#FFF8E1; border:1px solid #F2D16B; color:#5A4A00; padding:10px 14px; border-radius:8px; margin-top:14px; font-size:14px; }
   .fout { background:#FDEAEA; border-color:#F4B6B6; color:var(--rood); }
   .beschrijving { font-style:italic; color:#444; margin:14px 0 0; font-size:15px; }
+  .chartwrap { position:relative; width:100%; padding-bottom:62%; background:#fff; border:1px solid var(--rand); border-top:none; border-radius:0 0 10px 10px; overflow:hidden; }
+  @media (min-width:900px){ .chartwrap { padding-bottom:48%; } }
+  .chartwrap iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .chartwrap .fallback { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#555; font-size:14px; }
   @media (max-width:640px){ header{flex-wrap:wrap} header .netw{margin-left:0;text-align:left} }
 </style>
 </head>
@@ -73,6 +77,12 @@
   </div>
 
   <p class="beschrijving" id="beschrijving"></p>
+
+  <h2>Price chart — TBN/SOL on Raydium <span style="font-weight:normal;font-size:13px;color:#D6DEEB">(live via DexScreener)</span></h2>
+  <div class="chartwrap" id="chartwrap">
+    <div class="fallback" id="chartfallback">Loading chart… if it does not appear, <a style="margin-left:4px" target="_blank" rel="noopener" href="https://dexscreener.com/solana/GXkJxqznGsNSCmeCSuHNLqkKrVY7ZT2Q2Yt8ArkWk2KH">open it on DexScreener</a>.</div>
+    <iframe id="chart" title="TBN/SOL price chart" src="https://dexscreener.com/solana/GXkJxqznGsNSCmeCSuHNLqkKrVY7ZT2Q2Yt8ArkWk2KH?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTheme=light&theme=light&chartStyle=1&chartType=usd&interval=15" loading="lazy" allow="clipboard-write"></iframe>
+  </div>
 
   <h2>Token allocation — the four project wallets</h2>
   <div class="blok"><table id="wallets">
@@ -114,7 +124,7 @@
 
 <script>
 /* ============================================================
-   TBN DASHBOARD v2.0 EN (10-11-2026) — single file, no server, no keys. Public site: tradebrain-tbn.github.io/tbn-token
+   TBN DASHBOARD v2.1 EN (10-11-2026, + DexScreener chart embed) — single file, no server, no keys. Public site: tradebrain-tbn.github.io/tbn-token
    Reads only: public Solana RPC, DexScreener, the on-chain metadata JSON. Workbook: section 6 item 23 / 27.
    ============================================================ */
 const CONFIG = {
@@ -275,6 +285,7 @@ const sel = $("netwerk");
 for (const n of Object.keys(CONFIG).filter(k => CONFIG[k].rpc)) { const o = document.createElement("option"); o.value = n; o.textContent = n; sel.appendChild(o); }
 sel.value = NET; sel.onchange = () => { NET = sel.value; laad(); };
 $("ververs").onclick = laad;
+$("chart").addEventListener("load", () => { $("chartfallback").style.display = "none"; });
 $("rpcopslaan").onclick = () => { const v = $("rpcveld").value.trim(); if (!v.startsWith("https://")) { meld("An RPC URL starts with https://", true); return; } try { localStorage.setItem("tbn_rpc_" + NET, v); } catch (_) {} $("rpcveld").value = ""; laad(); };
 $("rpcwis").onclick = () => { try { localStorage.removeItem("tbn_rpc_" + NET); } catch (_) {} laad(); };
 laad(); setInterval(laad, CONFIG.verversSeconden * 1000);
