@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TradeBrain (TBN) — Official Dashboard</title>
+<meta name="description" content="TradeBrain (TBN) — utility token on Solana. Fixed supply of 10 billion, no minting, no freezing, immutable metadata, team tokens vested, liquidity permanently locked. Live on-chain dashboard.">
+<meta property="og:title" content="TradeBrain (TBN)">
+<meta property="og:description" content="Fixed supply · no minting · no freezing · immutable metadata · team vested · liquidity locked. Forged, not printed.">
+<meta property="og:image" content="https://gateway.irys.xyz/Aw83Lx7AmSeWuT25Wr8uMAMKPQwKtxFPdQJyCkPjWn1R">
+<link rel="icon" href="https://gateway.irys.xyz/Aw83Lx7AmSeWuT25Wr8uMAMKPQwKtxFPdQJyCkPjWn1R">
+<style>
+  :root { --navy:#1F3864; --navy2:#2E75B6; --gold:#D4A017; --grijs:#F2F2F2; --tekst:#222; --rand:#D9D9D9; --groen:#375623; --rood:#7B1F1F; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: Cambria, Georgia, "Times New Roman", serif; color:var(--tekst); background:#FAFAFA; }
+  header { background:var(--navy); color:#fff; padding:18px 24px; display:flex; align-items:center; gap:18px; border-bottom:4px solid var(--gold); }
+  header img { width:72px; height:72px; border-radius:50%; background:#fff2; }
+  header h1 { margin:0; font-size:26px; letter-spacing:.5px; }
+  header .sub { color:#D6DEEB; font-size:14px; margin-top:4px; }
+  header .netw { margin-left:auto; text-align:right; font-size:13px; color:#D6DEEB; }
+  header .netw select { font: inherit; padding:4px 8px; border-radius:6px; border:1px solid var(--gold); background:#fff; color:var(--navy); }
+  header .netw .pill { display:inline-block; margin-top:6px; padding:2px 10px; border-radius:12px; background:var(--gold); color:var(--navy); font-weight:bold; }
+  main { max-width:1180px; margin:0 auto; padding:20px 16px 40px; }
+  .kaarten { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; }
+  .kaart { background:#fff; border:1px solid var(--rand); border-radius:10px; padding:14px 16px; }
+  .kaart .label { font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:#666; }
+  .kaart .waarde { font-size:24px; font-weight:bold; color:var(--navy); margin-top:6px; word-break:break-all; }
+  .kaart .klein { font-size:13px; color:#555; margin-top:4px; }
+  .ok { color:var(--groen); } .let { color:var(--rood); }
+  h2 { font-size:17px; color:#fff; background:var(--navy); margin:26px 0 0; padding:8px 14px; border-radius:8px 8px 0 0; }
+  .blok { background:#fff; border:1px solid var(--rand); border-top:none; border-radius:0 0 10px 10px; padding:6px 0 4px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; background:var(--navy2); color:#fff; padding:8px 12px; font-weight:bold; }
+  td { padding:8px 12px; border-bottom:1px solid #EEE; vertical-align:top; }
+  tr:nth-child(even) td { background:var(--grijs); }
+  td.num, th.num { text-align:right; font-variant-numeric: tabular-nums; }
+  .adres { font-family: Consolas, monospace; font-size:12.5px; color:#333; }
+  a { color:var(--navy2); text-decoration:none; } a:hover { text-decoration:underline; }
+  .balk { height:10px; background:#E6E6E6; border-radius:5px; overflow:hidden; margin-top:4px; }
+  .balk > div { height:100%; background:var(--gold); }
+  .voet { margin-top:26px; font-size:12.5px; color:#666; display:flex; flex-wrap:wrap; gap:16px; align-items:center; }
+  .voet button { font:inherit; padding:6px 14px; border-radius:6px; border:1px solid var(--navy); background:#fff; color:var(--navy); cursor:pointer; }
+  .voet button:hover { background:var(--navy); color:#fff; }
+  .melding { background:#FFF8E1; border:1px solid #F2D16B; color:#5A4A00; padding:10px 14px; border-radius:8px; margin-top:14px; font-size:14px; }
+  .fout { background:#FDEAEA; border-color:#F4B6B6; color:var(--rood); }
+  .beschrijving { font-style:italic; color:#444; margin:14px 0 0; font-size:15px; }
+  @media (max-width:640px){ header{flex-wrap:wrap} header .netw{margin-left:0;text-align:left} }
+</style>
+</head>
+<body>
+<header>
+  <img id="logo" alt="" src="">
+  <div>
+    <h1><span id="naam">TradeBrain</span> <span style="color:var(--gold)">(<span id="symbool">TBN</span>)</span></h1>
+    <div class="sub">Live from the Solana blockchain · <span id="tijd">—</span></div>
+  </div>
+  <div class="netw">
+    <label>Network <select id="netwerk"></select></label><br>
+    <span class="pill" id="pil">devnet</span>
+  </div>
+</header>
+
+<main>
+  <div id="meldingen"></div>
+
+  <div class="kaarten" style="margin-top:16px">
+    <div class="kaart"><div class="label">Total supply</div><div class="waarde" id="supply">—</div><div class="klein" id="decimalen">—</div></div>
+    <div class="kaart"><div class="label">Mint authority</div><div class="waarde" id="mintauth">—</div><div class="klein">Can more TBN ever be created?</div></div>
+    <div class="kaart"><div class="label">Freeze authority</div><div class="waarde" id="freezeauth">—</div><div class="klein">Can any account be frozen?</div></div>
+    <div class="kaart"><div class="label">Metadata</div><div class="waarde" id="mutable">—</div><div class="klein" id="metauri">—</div></div>
+    <div class="kaart"><div class="label">Price (DexScreener)</div><div class="waarde" id="prijs">—</div><div class="klein" id="prijsinfo">—</div></div>
+    <div class="kaart"><div class="label">Holders (token accounts)</div><div class="waarde" id="houders">—</div><div class="klein" id="houdersinfo">accounts with balance &gt; 0</div></div>
+  </div>
+
+  <p class="beschrijving" id="beschrijving"></p>
+
+  <h2>Token allocation — the four project wallets</h2>
+  <div class="blok"><table id="wallets">
+    <thead><tr><th>Allocation</th><th>Address</th><th class="num">Balance TBN</th><th class="num">Share</th><th>Purpose</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+
+  <h2>Latest transactions on the mint address</h2>
+  <div class="blok"><table id="txs">
+    <thead><tr><th>Time</th><th>Signature</th><th>Status</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+
+  <h2>Verified facts — what every holder can check on-chain</h2>
+  <div class="blok" style="padding:4px 0">
+  <table>
+    <tbody>
+      <tr><td><b>Token</b></td><td>TradeBrain (TBN) — SPL token on Solana, 9 decimals. Mint address <a class="adres" target="_blank" rel="noopener" href="https://solscan.io/token/FxZSdHu6vLGSdo8qbG9K6UuBZxmAzY2dXEyrdc36u6UA">FxZSdHu6vLGSdo8qbG9K6UuBZxmAzY2dXEyrdc36u6UA</a>. Beware of look-alike tickers: the mint address is the identity.</td></tr>
+      <tr><td><b>Fixed supply</b></td><td>10,000,000,000 TBN minted on 8 Nov 2026. Mint authority revoked — no TBN can ever be created again. Freeze authority never set — no account can be frozen.</td></tr>
+      <tr><td><b>Immutable metadata</b></td><td>Name, symbol and logo link are permanently fixed (isMutable = 0 since 9 Nov 2026). Metadata and logo are stored on Arweave: <a target="_blank" rel="noopener" href="https://gateway.irys.xyz/331uYhJyFikyrz9Lib9AGzBnngVrQt2RkyzpTZdR2LPK">tbn.json</a>.</td></tr>
+      <tr><td><b>Team tokens vested</b></td><td>The full team allocation (10%) is locked in a non-cancellable, non-transferable Streamflow vesting contract: 24 months linear, daily unlock, start 8 Nov 2026, end 6 Nov 2028. <a target="_blank" rel="noopener" href="https://app.streamflow.finance/contract/solana/mainnet/CRgCmUGP6BZPGWjTp74Khf1UPTSjmxbp3mfhjmYJD7VJ">View contract</a>.</td></tr>
+      <tr><td><b>Liquidity locked</b></td><td>Raydium CPMM pool TBN/SOL (fee 0.25%), AMM <a class="adres" target="_blank" rel="noopener" href="https://raydium.io/liquidity/increase/?mode=add&pool_id=GXkJxqznGsNSCmeCSuHNLqkKrVY7ZT2Q2Yt8ArkWk2KH">GXkJxq…Wk2KH</a>. 100% of the LP tokens were permanently locked via Raydium Burn &amp; Lock on 9 Nov 2026 — the initial liquidity can never be withdrawn; only trading fees remain claimable.</td></tr>
+      <tr><td><b>Utility</b></td><td>TBN is the membership and discount token of TradeBrain, an automated crypto trading platform. Holding a minimum TBN balance will unlock access to TradeBrain services; details are announced before launch of the first service. TBN carries no profit share, dividend or ownership right.</td></tr>
+      <tr><td><b>Trade</b></td><td><a target="_blank" rel="noopener" href="https://raydium.io/swap/?inputMint=sol&outputMint=FxZSdHu6vLGSdo8qbG9K6UuBZxmAzY2dXEyrdc36u6UA">Raydium</a> · <a target="_blank" rel="noopener" href="https://jup.ag/swap/SOL-FxZSdHu6vLGSdo8qbG9K6UuBZxmAzY2dXEyrdc36u6UA">Jupiter</a> · <a target="_blank" rel="noopener" href="https://dexscreener.com/solana/GXkJxqznGsNSCmeCSuHNLqkKrVY7ZT2Q2Yt8ArkWk2KH">DexScreener chart</a>. Early-stage pool: expect high volatility.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="beschrijving" style="font-size:13px;color:#666">This page reads directly from the Solana blockchain and public APIs; nothing here is stored on a server. Not financial advice. Crypto assets are volatile and you can lose your entire investment.</p>
+
+  <div class="voet">
+    <span>Mint: <a class="adres" id="mintlink" target="_blank" rel="noopener"></a></span>
+    <span>RPC: <span id="rpc" class="adres"></span></span>
+    <button id="ververs">Refresh</button>
+    <span id="auto">auto-refresh every 60 s</span>
+    <span>Custom RPC (optional, stays in this browser): <input id="rpcveld" type="password" placeholder="https://…" style="font:inherit;font-size:12px;width:230px;padding:3px 6px;border:1px solid #BBB;border-radius:5px"> <button id="rpcopslaan">Save</button> <button id="rpcwis">Clear</button></span>
+    <span style="margin-left:auto">TBN · Forged, not printed. · <a href="https://github.com/tradebrain-tbn/tbn-token" target="_blank" rel="noopener">GitHub</a></span>
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   TBN DASHBOARD v2.0 EN (10-11-2026) — single file, no server, no keys. Public site: tradebrain-tbn.github.io/tbn-token
+   Reads only: public Solana RPC, DexScreener, the on-chain metadata JSON. Workbook: section 6 item 23 / 27.
+   ============================================================ */
+const CONFIG = {
+  devnet: {
+    mint: "GmGPcZFAgKN5Zph2V4P7GRpRarAdidxnUJVri26XJ86p",   // tweede devnet-test 08-11-2026
+    rpc:  "https://api.devnet.solana.com",
+    solscan: "?cluster=devnet",
+  },
+  mainnet: {
+    mint: "FxZSdHu6vLGSdo8qbG9K6UuBZxmAzY2dXEyrdc36u6UA",   // MAINNET-mint 08-11-2026
+    rpc:  "https://solana-rpc.publicnode.com",            // publieke poort die browsers toestaat; api.mainnet-beta.solana.com weigert die
+    solscan: "",
+  },
+  wallets: [   // sectie 7 werkboek — publieke adressen
+    { pot: "Liquidity (60%)",      adres: "HVuSqwSDGCar3rUyu2uzaLADrrtvYK7xpudof5YqLs2j", doel: "Raydium pool (600M + 6.9 SOL seeded 9 Nov 2026, LP permanently locked); remainder reserved for adding liquidity" },
+    { pot: "Community (20%)",      adres: "CYHZVkHJnjCCbs5wWwgjcPFt6XhFkvhEtXnd8k6WBWkz", doel: "Airdrops and incentives, released in phases" },
+    { pot: "Team / Treasury (10%)", adres: "DWa8ZrARzXD7XxxuWy5i3fcKtcyBRwAsv8oj3F5zQGy8", doel: "Locked in Streamflow vesting: 24 months linear, daily unlock, non-cancellable (balance 0 = all tokens in the vesting contract)" },
+    { pot: "Reserve (10%)",        adres: "CJxGK3Di4Y4TVUjqzgstboHtXKwR8wm7t9STAXLxLKvF", doel: "Future exchange listings and market making" },
+  ],
+  verversSeconden: 60,
+};
+const TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
+const METADATA_PROGRAM = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s";
+
+/* ---------- base58 ---------- */
+const ALFA = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+function b58decode(s) {
+  let n = 0n; for (const c of s) { const i = ALFA.indexOf(c); if (i < 0) throw new Error("base58"); n = n * 58n + BigInt(i); }
+  const bytes = []; while (n > 0n) { bytes.push(Number(n & 255n)); n >>= 8n; }
+  for (const c of s) { if (c === "1") bytes.push(0); else break; }
+  return new Uint8Array(bytes.reverse());
+}
+function b58encode(bytes) {
+  let n = 0n; for (const b of bytes) n = (n << 8n) + BigInt(b);
+  let s = ""; while (n > 0n) { s = ALFA[Number(n % 58n)] + s; n /= 58n; }
+  for (const b of bytes) { if (b === 0) s = "1" + s; else break; }
+  return s;
+}
+/* ---------- ed25519: ligt het punt op de curve? (voor PDA-afleiding) ---------- */
+const P = (1n << 255n) - 19n, Dc = (-121665n * modinv(121666n)) % P;
+function mod(a) { a %= P; return a < 0n ? a + P : a; }
+function modpow(b, e) { let r = 1n; b = mod(b); while (e > 0n) { if (e & 1n) r = r * b % P; b = b * b % P; e >>= 1n; } return r; }
+function modinv(a) { return modpow(a, P - 2n); }
+function opCurve(bytes) {
+  let y = 0n; for (let i = 31; i >= 0; i--) y = (y << 8n) + BigInt(bytes[i] & (i === 31 ? 127 : 255));
+  if (y >= P) return false;
+  const y2 = y * y % P, u = mod(y2 - 1n), v = mod(Dc * y2 + 1n);
+  const x2 = u * modinv(v) % P;
+  let x = modpow(x2, (P + 3n) / 8n);
+  if (mod(x * x - x2) !== 0n) x = x * modpow(2n, (P - 1n) / 4n) % P;
+  return mod(x * x - x2) === 0n;
+}
+async function sha256(...parts) {
+  const len = parts.reduce((a, p) => a + p.length, 0), buf = new Uint8Array(len); let o = 0;
+  for (const p of parts) { buf.set(p, o); o += p.length; }
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", buf));
+}
+const ATA_PROGRAM = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL";
+async function findPDA(seeds, programId) {
+  const prog = b58decode(programId), tag = new TextEncoder().encode("ProgramDerivedAddress");
+  for (let bump = 255; bump >= 0; bump--) {
+    const h = await sha256(...seeds, new Uint8Array([bump]), prog, tag);
+    if (!opCurve(h)) return b58encode(h);
+  }
+  throw new Error("geen PDA");
+}
+const metadataPDA = mint => findPDA([new TextEncoder().encode("metadata"), b58decode(METADATA_PROGRAM), b58decode(mint)], METADATA_PROGRAM);
+const ataVan = (owner, mint) => findPDA([b58decode(owner), b58decode(TOKEN_PROGRAM), b58decode(mint)], ATA_PROGRAM);   // token-account zonder zoekopdracht
+/* ---------- RPC ---------- */
+let NET = "mainnet";
+function rpcUrl() { try { const e = localStorage.getItem("tbn_rpc_" + NET); if (e) return e; } catch (_) {} return CONFIG[NET].rpc; }
+async function rpc(method, params) {
+  const r = await fetch(rpcUrl(), { method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) });
+  const j = await r.json(); if (j.error) throw new Error(method + ": " + j.error.message); return j.result;
+}
+function b64bytes(s) { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+function leesMetadata(bytes) {
+  const dv = new DataView(bytes.buffer, bytes.byteOffset); let o = 1 + 32 + 32;
+  const str = () => { const n = dv.getUint32(o, true); o += 4; const s = new TextDecoder().decode(bytes.slice(o, o + n)).replace(/\0+$/, ""); o += n; return s; };
+  const name = str(), symbol = str(), uri = str();
+  o += 2;                                   // seller fee
+  if (bytes[o++] === 1) { const n = dv.getUint32(o, true); o += 4 + n * 34; }   // creators
+  o += 1;                                   // primarySaleHappened
+  const isMutable = bytes[o] === 1;
+  return { name, symbol, uri, isMutable, updateAuthority: b58encode(bytes.slice(1, 33)) };
+}
+/* ---------- weergave ---------- */
+const $ = id => document.getElementById(id);
+const fmt = (n, d = 0) => Number(n).toLocaleString("en-US", { maximumFractionDigits: d });
+function kort(a) { return a.slice(0, 6) + "…" + a.slice(-5); }
+function meld(tekst, fout = false) { const d = document.createElement("div"); d.className = "melding" + (fout ? " fout" : ""); d.textContent = tekst; $("meldingen").appendChild(d); }
+
+async function laad() {
+  const c = CONFIG[NET]; $("meldingen").innerHTML = ""; $("pil").textContent = NET;
+  const eigen = rpcUrl() !== c.rpc; $("rpc").textContent = eigen ? "eigen RPC (" + new URL(rpcUrl()).hostname + ")" : c.rpc;
+  $("tijd").textContent = new Date().toLocaleString("en-US");
+  if (!c.mint) { meld("No mainnet mint configured."); return; }
+  $("mintlink").textContent = c.mint; $("mintlink").href = `https://solscan.io/token/${c.mint}${c.solscan}`;
+  try {
+    // 1. mint-account: supply, decimalen, authorities
+    const acc = await rpc("getAccountInfo", [c.mint, { encoding: "jsonParsed" }]);
+    if (!acc || !acc.value) throw new Error("mint-adres niet gevonden op " + NET);
+    const info = acc.value.data.parsed.info, dec = info.decimals;
+    const supply = Number(info.supply) / 10 ** dec;
+    $("supply").textContent = fmt(supply); $("decimalen").textContent = `${dec} decimals · fixed, no minting possible`;
+    $("mintauth").innerHTML = info.mintAuthority ? `<span class="let">active</span>` : `<span class="ok">revoked ✓</span>`;
+    $("freezeauth").innerHTML = info.freezeAuthority ? `<span class="let">active</span>` : `<span class="ok">none ✓</span>`;
+    // 2. metadata
+    const pda = await metadataPDA(c.mint);
+    const m = await rpc("getAccountInfo", [pda, { encoding: "base64" }]);
+    if (m && m.value) {
+      const md = leesMetadata(b64bytes(m.value.data[0]));
+      $("naam").textContent = md.name; $("symbool").textContent = md.symbol; document.title = `${md.symbol} Dashboard`;
+      $("mutable").innerHTML = md.isMutable ? `<span class="let">mutable</span>` : `<span class="ok">immutable ✓</span>`;
+      $("metauri").innerHTML = `metadata on Arweave · <a href="${md.uri}" target="_blank" rel="noopener">tbn.json</a>`;
+      try { const j = await (await fetch(md.uri, { cache: "no-store" })).json(); if (j.image) $("logo").src = j.image; if (j.description) $("beschrijving").textContent = "“" + j.description + "”"; }
+      catch (e) { meld("Metadata JSON not reachable: " + md.uri); }
+    } else { $("mutable").textContent = "none"; $("metauri").textContent = "no Metaplex metadata found"; }
+    // 3. wallets
+    const tb = $("wallets").querySelector("tbody"); tb.innerHTML = ""; let metSaldo = 0;
+    for (const w of CONFIG.wallets) {
+      let saldo = 0;
+      const ta = await rpc("getAccountInfo", [await ataVan(w.adres, c.mint), { encoding: "jsonParsed" }]);   // zelfde aanroep als voor de mint — overal toegestaan
+      if (ta && ta.value) saldo = Number(ta.value.data.parsed.info.tokenAmount.uiAmount || 0);          // geen account = saldo 0
+      const pct = supply ? saldo / supply * 100 : 0; if (saldo > 0) metSaldo++;
+      tb.insertAdjacentHTML("beforeend", `<tr><td><b>${w.pot}</b></td><td><a class="adres" target="_blank" rel="noopener" href="https://solscan.io/account/${w.adres}${c.solscan}">${kort(w.adres)}</a></td><td class="num">${fmt(saldo)}</td><td class="num">${fmt(pct, 1)}%<div class="balk"><div style="width:${Math.min(100, pct)}%"></div></div></td><td>${w.doel}</td></tr>`);
+    }
+    // 4. holders — Jupiter lite API (public) first, RPC fallback
+    let holdersDex = null;
+    try { const jj = await (await fetch(`https://lite-api.jup.ag/tokens/v2/search?query=${c.mint}`)).json(); const tok = (jj || []).find(x => x.id === c.mint); if (tok && tok.holderCount != null) holdersDex = tok.holderCount; } catch (_) {}
+    try {
+      if (holdersDex != null) throw new Error("use jupiter");
+      const h = await rpc("getTokenLargestAccounts", [c.mint]);
+      const n = h.value.filter(v => Number(v.uiAmount) > 0).length;
+      $("houders").textContent = n + (n >= 20 ? "+" : ""); $("houdersinfo").textContent = n >= 20 ? "largest 20 accounts returned by the RPC" : "accounts with balance > 0";
+    } catch (e) { $("houders").textContent = (holdersDex ?? metSaldo); $("houdersinfo").textContent = holdersDex != null ? "via DexScreener/Jupiter" : "of the four project wallets (public RPC gives no holder list) — see Solscan"; }
+    // 5. transacties
+    const tt = $("txs").querySelector("tbody"); tt.innerHTML = "";
+    try {
+      const sigs = await rpc("getSignaturesForAddress", [c.mint, { limit: 8 }]);
+      for (const s of sigs) {
+        const t = s.blockTime ? new Date(s.blockTime * 1000).toLocaleString("en-US") : "—";
+        tt.insertAdjacentHTML("beforeend", `<tr><td>${t}</td><td><a class="adres" target="_blank" rel="noopener" href="https://solscan.io/tx/${s.signature}${c.solscan}">${kort(s.signature)}</a></td><td>${s.err ? '<span class="let">failed</span>' : '<span class="ok">success</span>'}</td></tr>`);
+      }
+    } catch (e) { tt.insertAdjacentHTML("beforeend", `<tr><td colspan="3">This RPC endpoint does not serve a transaction list — <a target="_blank" rel="noopener" href="https://solscan.io/token/${c.mint}${c.solscan}#transfers">view transactions on Solscan</a>.</td></tr>`); }
+    // 6. prijs
+    try {
+      const d = await (await fetch(`https://api.dexscreener.com/latest/dex/tokens/${c.mint}`)).json();
+      const p = (d.pairs || []).find(x => x.chainId === "solana");
+      if (p) { $("prijs").textContent = "$" + Number(p.priceUsd).toLocaleString("en-US", { maximumSignificantDigits: 4 }); $("prijsinfo").innerHTML = `${p.dexId} · liquidity $${fmt(p.liquidity?.usd || 0)} · 24h volume $${fmt(p.volume?.h24 || 0)} · <a href="${p.url}" target="_blank" rel="noopener">chart</a>`; }
+      else { $("prijs").textContent = "no pool"; $("prijsinfo").textContent = NET === "devnet" ? "no trading on devnet" : "no Raydium pool yet"; }
+    } catch (e) { $("prijs").textContent = "—"; $("prijsinfo").textContent = "DexScreener not reachable"; }
+  } catch (e) { meld("Error while loading: " + e.message + (e.message.includes("fetch") ? " — the RPC endpoint refused or is unreachable. Paste a custom RPC URL at the bottom and click Save." : ""), true); }
+}
+/* ---------- netwerkkeuze en verversen ---------- */
+const sel = $("netwerk");
+for (const n of Object.keys(CONFIG).filter(k => CONFIG[k].rpc)) { const o = document.createElement("option"); o.value = n; o.textContent = n; sel.appendChild(o); }
+sel.value = NET; sel.onchange = () => { NET = sel.value; laad(); };
+$("ververs").onclick = laad;
+$("rpcopslaan").onclick = () => { const v = $("rpcveld").value.trim(); if (!v.startsWith("https://")) { meld("An RPC URL starts with https://", true); return; } try { localStorage.setItem("tbn_rpc_" + NET, v); } catch (_) {} $("rpcveld").value = ""; laad(); };
+$("rpcwis").onclick = () => { try { localStorage.removeItem("tbn_rpc_" + NET); } catch (_) {} laad(); };
+laad(); setInterval(laad, CONFIG.verversSeconden * 1000);
+</script>
+</body>
+</html>
