@@ -127,7 +127,7 @@
 
 <script>
 /* ============================================================
-   TBN DASHBOARD v2.2 EN (10-11-2026, + DexScreener chart embed) — single file, no server, no keys. Public site: tradebrain-tbn.github.io/tbn-token
+   TBN DASHBOARD v2.3 EN (10-11-2026, + DexScreener chart embed) — single file, no server, no keys. Public site: tradebrain-tbn.github.io/tbn-token
    Reads only: public Solana RPC, DexScreener, the on-chain metadata JSON. Workbook: section 6 item 23 / 27.
    ============================================================ */
 const CONFIG = {
@@ -288,9 +288,16 @@ const sel = $("netwerk");
 for (const n of Object.keys(CONFIG).filter(k => CONFIG[k].rpc)) { const o = document.createElement("option"); o.value = n; o.textContent = n; sel.appendChild(o); }
 sel.value = NET; sel.onchange = () => { NET = sel.value; laad(); };
 $("ververs").onclick = laad;
-let chartLoaded = false;
-$("chart").addEventListener("load", () => { chartLoaded = true; $("chartfallback").style.display = "none"; });
-setTimeout(() => { if (!chartLoaded) { $("chartmsg").textContent = "The embedded chart is blocked in this browser (ad/tracking blocker or mobile browser)."; $("chartbtn").style.display = "inline-block"; } }, 6000);
+// DexScreener's embed does not render inside iframes on most mobile browsers: on narrow screens show a button instead.
+const smallScreen = window.matchMedia("(max-width: 700px)").matches;
+if (smallScreen) {
+  $("chart").remove(); $("chartwrap").style.paddingBottom = "0"; $("chartwrap").style.height = "160px";
+  $("chartmsg").textContent = "Live candlestick chart (15m · volume · trades) opens on DexScreener:"; $("chartbtn").style.display = "inline-block";
+} else {
+  let chartLoaded = false;
+  $("chart").addEventListener("load", () => { chartLoaded = true; $("chartfallback").style.display = "none"; });
+  setTimeout(() => { if (!chartLoaded) { $("chartmsg").textContent = "The embedded chart is blocked in this browser (ad/tracking blocker)."; $("chartbtn").style.display = "inline-block"; } }, 6000);
+}
 $("rpcopslaan").onclick = () => { const v = $("rpcveld").value.trim(); if (!v.startsWith("https://")) { meld("An RPC URL starts with https://", true); return; } try { localStorage.setItem("tbn_rpc_" + NET, v); } catch (_) {} $("rpcveld").value = ""; laad(); };
 $("rpcwis").onclick = () => { try { localStorage.removeItem("tbn_rpc_" + NET); } catch (_) {} laad(); };
 laad(); setInterval(laad, CONFIG.verversSeconden * 1000);
