@@ -28,7 +28,13 @@ Fixed supply · no minting · no freezing · immutable metadata · team vested �
 
 ## Utility
 
-TBN is the membership and discount token of TradeBrain. Holding a minimum TBN balance will unlock access to TradeBrain services; the first service and threshold are announced before launch. TBN carries no profit share, dividend or ownership right.
+TBN is the membership and discount token of TradeBrain. TBN carries no profit share, dividend or ownership right.
+
+**First service — TradeBrain Lab Notes (live since 15 Nov 2026).** A members-only Telegram group for wallets holding **at least 5,000,000 TBN**. Every 14 days, in turns: a note on reading charts and indicators, and one finished measurement from TradeBrain's own data (the question, the method, what the data said — published at least 14 days after it was closed). No signals, positions or settings. Members above the threshold get priority and a discount on the first paid TradeBrain service, once it exists.
+
+Join: [https://telegram.me/collablandbot?start=VFBDI1RFTCNDT01NIy0xMDAzOTc5MzMxMzcw](https://telegram.me/collablandbot?start=VFBDI1RFTCNDT01NIy0xMDAzOTc5MzMxMzcw) — the Collab.Land bot checks your balance; you sign a message to prove wallet ownership (read-only, no transaction, never share a seed phrase). Members who drop below the threshold are removed at the next balance check.
+
+Follow: [@TradeBrainTBN on X](https://x.com/TradeBrainTBN).
 
 ## This repository
 
