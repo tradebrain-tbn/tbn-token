@@ -34,7 +34,11 @@ TBN is the membership and discount token of TradeBrain. TBN carries no profit sh
 
 Join: [https://telegram.me/collablandbot?start=VFBDI1RFTCNDT01NIy0xMDAzOTc5MzMxMzcw](https://telegram.me/collablandbot?start=VFBDI1RFTCNDT01NIy0xMDAzOTc5MzMxMzcw) — the Collab.Land bot checks your balance; you sign a message to prove wallet ownership (read-only, no transaction, never share a seed phrase). Members who drop below the threshold are removed at the next balance check.
 
-Follow: [@TradeBrainTBN on X](https://x.com/TradeBrainTBN).
+## Channels
+
+[X — @TradeBrainTBN](https://x.com/TradeBrainTBN) · [Lab Notes (Telegram, holders ≥5M TBN)](https://telegram.me/collablandbot?start=VFBDI1RFTCNDT01NIy0xMDAzOTc5MzMxMzcw) · [GitHub](https://github.com/tradebrain-tbn/tbn-token)
+
+YouTube (short explainers with the TBN mascot) follows in December 2026. Content is in English; channels for Vietnam, the Philippines and Indonesia come later.
 
 ## This repository
 
