@@ -36,7 +36,7 @@ Join: [https://telegram.me/collablandbot?start=VFBDI1RFTCNDT01NIy0xMDAzOTc5MzMxM
 
 ## Channels
 
-[X — @TradeBrainTBN](https://x.com/TradeBrainTBN) · [YouTube — @TradeBrainTBN](https://www.youtube.com/@TradeBrainTBN) · [Lab Notes (Telegram, holders ≥5M TBN)](https://telegram.me/collablandbot?start=VFBDI1RFTCNDT01NIy0xMDAzOTc5MzMxMzcw) · [GitHub](https://github.com/tradebrain-tbn/tbn-token)
+[X — @TradeBrainTBN](https://x.com/TradeBrainTBN) · [YouTube — @TradeBrainTBN](https://www.youtube.com/@TradeBrainTBN) · [Facebook — TradeBrain TBN](https://www.facebook.com/profile.php?id=61596864606954) · [Lab Notes (Telegram, holders ≥5M TBN)](https://telegram.me/collablandbot?start=VFBDI1RFTCNDT01NIy0xMDAzOTc5MzMxMzcw) · [GitHub](https://github.com/tradebrain-tbn/tbn-token)
 
 First film: [The difference between an exchange and a DEX](https://youtu.be/z9ebQHTDuA4) (22 Nov 2026). Content is in English; channels for Vietnam, the Philippines and Indonesia come later.
 
